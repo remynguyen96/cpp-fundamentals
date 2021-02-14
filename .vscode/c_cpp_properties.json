@@ -1,0 +1,24 @@
+{
+  "env": {
+    "myCompilerPath": "/usr/bin/gcc"
+  },
+  "configurations": [
+    {
+      "name": "Mac Compiler C++",
+      "intelliSenseMode": "clang-x64",
+      "includePath": [],
+      "macFrameworkPath": ["/System/Library/Frameworks"],
+      "forcedInclude": [],
+      "compilerPath": "/usr/bin/clang++",
+      "cStandard": "c17",
+      "cppStandard": "c++20"
+      // "compileCommands": "/path/to/compile_commands.json",
+      // "browse": {
+      //   "path": ["${workspaceFolder}"],
+      //   "limitSymbolsToIncludedHeaders": true,
+      //   "databaseFilename": ""
+      // }
+    }
+  ],
+  "version": 4
+}
