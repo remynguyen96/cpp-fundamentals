@@ -1,5 +1,0 @@
-Ten;Tong
-Hoa;16
-Loan;16
-Hung;15
-Thanh;19.5

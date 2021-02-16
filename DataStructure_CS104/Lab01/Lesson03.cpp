@@ -26,28 +26,34 @@ struct Examinee {
   float foreignLanguage;
 };
 
-vector<string> split(string str, string delimiter) {
-    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
-    string token;
-    vector<string> res;
+struct Point {
+  string test;
+  float test2;
+};
 
-    while ((pos_end = str.find(delimiter, pos_start)) != string::npos) {
-        token = str.substr (pos_start, pos_end - pos_start);
-        pos_start = pos_end + delim_len;
-        res.push_back (token);
-    }
+// vector<string> split(string str, string delimiter) {
+//     size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+//     string token;
+//     vector<string> res;
 
-    res.push_back (str.substr (pos_start));
-    return res;
-}
+//     while ((pos_end = str.find(delimiter, pos_start)) != string::npos) {
+//         token = str.substr (pos_start, pos_end - pos_start);
+//         pos_start = pos_end + delim_len;
+//         res.push_back (token);
+//     }
+
+//     res.push_back (str.substr (pos_start));
+//     return res;
+// }
 void openFile(ifstream &ifs, string file);
 Examinee readExaminee(string lineInfo);
 vector<Examinee> readExamineeList(string fileName);
 void writeTotal(vector<Examinee> examineeList, string outFileName);
-
+string parseValue(string value);
 
 int main() {
   system("clear");
+
   vector<Examinee> examineeList = readExamineeList("data/data.txt");
 
   writeTotal(examineeList, "data/result.txt");
@@ -65,6 +71,10 @@ void openFile(ifstream &ifs, string file) {
   }
 }
 
+string parseValue(string value) {
+  return value.empty() ? "0" : value;
+}
+
 Examinee readExaminee(string lineInfo) {
   Examinee examinee; 
   stringstream stream(lineInfo);
@@ -75,53 +85,64 @@ Examinee readExaminee(string lineInfo) {
     dataFields.push_back(info);
   }
 
-  examinee.id = dataFields[0];
+  examinee.id = parseValue(dataFields[0]);
+  examinee.math = stof(parseValue(dataFields[2]));
+  examinee.literature = stof(parseValue(dataFields[3]));
+  examinee.physic = stof(parseValue(dataFields[4]));
+  examinee.chemistry = stof(parseValue(dataFields[5]));
+  examinee.biology = stof(parseValue(dataFields[6]));
+  examinee.history = stof(parseValue(dataFields[7]));
+  examinee.geography = stof(parseValue(dataFields[8]));
+  examinee.civicEducation = stof(parseValue(dataFields[9]));
+  examinee.naturalScience = examinee.physic + examinee.chemistry + examinee.biology;
+  examinee.socialScience = examinee.history + examinee.geography + examinee.civicEducation;
+  examinee.foreignLanguage = stof(parseValue(dataFields[12]));
 
-  for(int index = 0; index <= dataFields.size(); index++)	{
-    string value = dataFields[index];
-    value = value.empty() ? "0" : value;
-    
-  
-    if (index == 0) {
-      examinee.id = value;
-    } else if (index >= 2 && index <= 12) {
-      switch(index) {
-        case 2:
-          examinee.math = stof(value);
-          break;
-        case 3:
-          examinee.literature = stof(value);
-          break;
-        case 4:
-          examinee.physic = stof(value);
-          break;
-        case 5:
-          examinee.chemistry = stof(value);
-          break;
-        case 6:
-          examinee.biology = stof(value);
-          break;
-        case 7:
-          examinee.history = stof(value);
-          break;
-        case 8:
-          examinee.geography = stof(value);
-          break;
-        case 9:
-          examinee.civicEducation = stof(value);
-          break;
-        case 10:
-          examinee.naturalScience = examinee.physic + examinee.chemistry + examinee.biology;
-          break;
-        case 11:
-          examinee.socialScience = examinee.history + examinee.geography + examinee.civicEducation;
-          break;  
-        default:
-          examinee.foreignLanguage = stof(value);
-          break;
-      }
-    }
-  }
+  // for(int index = 0; index <= dataFields.size(); index++)	{
+  //   string value = dataFields[index];
+  //   value = value.empty() ? "0" : value;
+
+  //   if (index == 0) {
+  //     examinee.id = value;
+  //   } else if (index >= 2 && index <= 12) {
+            
+  //     switch(index) {
+  //       case 2:
+  //         examinee.math = stof(value);
+  //         break;
+  //       case 3:
+  //         examinee.literature = stof(value);
+  //         break;
+  //       case 4:
+  //         examinee.physic = stof(value);
+  //         break;
+  //       case 5:
+  //         examinee.chemistry = stof(value);
+  //         break;
+  //       case 6:
+  //         examinee.biology = stof(value);
+  //         break;
+  //       case 7:
+  //         examinee.history = stof(value);
+  //         break;
+  //       case 8:
+  //         examinee.geography = stof(value);
+  //         break;
+  //       case 9:
+  //         examinee.civicEducation = stof(value);
+  //         break;
+  //       case 10:
+  //         examinee.naturalScience = examinee.physic + examinee.chemistry + examinee.biology;
+  //         break;
+  //       case 11:
+  //         examinee.socialScience = examinee.history + examinee.geography + examinee.civicEducation;
+  //         break;  
+  //       default:
+  //         examinee.foreignLanguage = stof(value);
+  //         break;
+  //     }
+  //   }
+  // }
 
   return examinee;
 }

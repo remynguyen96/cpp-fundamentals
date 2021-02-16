@@ -7,7 +7,8 @@ using namespace std;
 
 void SynchronizePointer() {
   int a;
-  int *p = &a;
+  int *p = &a; 
+
 
   cout << &a << endl;
   cout << p << endl;

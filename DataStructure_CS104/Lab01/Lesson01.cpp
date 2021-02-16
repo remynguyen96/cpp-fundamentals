@@ -7,6 +7,7 @@
 #include <string>
 #include <cmath>
 
+// TODO: Practice pointer and recursion.
 using namespace std;
 // #define MAX_SIZE 100
 void inputArray(int* &a, int &n);
@@ -73,6 +74,7 @@ int main() {
   // cout << "Binary Search: " << binarySearch(arr, n, key) << endl;
   // cout << "Recursive Binary Search: " << recursiveBinarySearch(arr, n, key) << endl;
 
+  dellocateArray(arr);
   return 0;
 }
 
@@ -89,7 +91,7 @@ void sortArray(int *&array, int n) {
           temp = array[i];
           array[i] = array[j];
           array[j] = temp;
-      } 
+      }
     }
   }
 }
@@ -129,7 +131,7 @@ void printArray(int *array, int n) {
 }
 
 int binarySearch(int* array, int n, int key) {
-  int midNumber = round(n / 2); 
+  int midNumber = round(n / 2);
 
   if (array[midNumber] < key) {
     for (int i = 0; i < midNumber; i++) {
@@ -150,36 +152,36 @@ int binarySearch(int* array, int n, int key) {
 
 int findMin(int* arr, int n) {
   int smallest = arr[0];
-  
+
   for (int i = 0; i < n; i++) {
     if (arr[i] < smallest) {
       smallest = arr[i];
     }
-  }  
+  }
 
   return smallest;
-} 
+}
 
 int findMaxModulus(int* arr, int n) {
   int largest = abs(arr[0]);
-  
+
   for (int i = 0; i < n; i++) {
     int absoluteCurrentNumber = abs(arr[i]);
 
     if (absoluteCurrentNumber > largest) {
       largest = absoluteCurrentNumber;
     }
-  }  
+  }
 
   return largest;
-} 
+}
 
 bool isAscending(int* arr, int n) {
   for (int i = n - 1; i > 0; i--) {
     if (arr[i] < arr[i - 1]) {
       return false;
     }
-  }  
+  }
 
   return true;
 }
@@ -188,7 +190,7 @@ int sumOfArray(int* arr, int n) {
   int sum = arr[0];
   for (int i = 1; i < n; i++) {
     sum += arr[i];
-  }   
+  }
 
   return sum;
 }
@@ -202,10 +204,10 @@ bool isPrimeNumber(int number) {
 
     for (int i = 1; i <= number; i++) {
       if (number % i == 0) {
-        counter++; 
+        counter++;
       }
     }
-    
+
     if (counter == 2) {
       return true;
     }
@@ -222,13 +224,13 @@ int countPrime(int* arr, int n) {
     if (isPrimeNumber(arr[i])) {
       count++;
     }
-  }   
+  }
 
   return count;
 }
 
 // int recursiveBinarySearch(int* array, int left, int right, int key) {
-//   int midNumber = round(n / 2); 
+//   int midNumber = round(n / 2);
 
 //   if (array[midNumber] < key) {
 //     recursiveBinarySearch(array, left, right, key);
@@ -246,5 +248,5 @@ int countPrime(int* arr, int n) {
 //     }
 //   }
 
-//   return -1; 
+//   return -1;
 // }
