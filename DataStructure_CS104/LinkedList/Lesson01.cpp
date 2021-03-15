@@ -2,25 +2,25 @@
 #include <cmath>
 
 using namespace std;
-// TODO: Handle linked list with one pointer;
+// TODO: Handle linked List with one pointer;
 
-struct NODE {
+struct Node {
   int data;
-  NODE *pNext;
+  Node *pNext;
 };
 
-typedef NODE* LIST;
+typedef Node* List;
 
-void Init(LIST &l) {
+void Init(List &l) {
   l = NULL;
 }
 
-bool isEmpty(LIST l) {
+bool isEmpty(List l) {
   return l == NULL;
 }
 
-NODE *createNode(int data) {
-  NODE *pNode = new NODE;
+Node *createNode(int data) {
+  Node *pNode = new Node;
 
   if (pNode == NULL) return NULL;
 
@@ -30,11 +30,18 @@ NODE *createNode(int data) {
   return pNode;
 }
 
-void AddTail(LIST &l, NODE *p) {
+void printListNode(List List) {
+  while (List->data) {
+    cout << List->data << endl;
+    List = List->pNext;
+  }
+}
+
+void AddTail(List &l, Node *p) {
   if (l == NULL) {
     l = p;
   } else {
-    NODE *newPointer = l;
+    Node *newPointer = l;
 
     while (newPointer -> pNext) { // checking newPointer -> pNext != NULL;
       newPointer = newPointer -> pNext;
@@ -44,7 +51,7 @@ void AddTail(LIST &l, NODE *p) {
   }
 }
 
-void Input(LIST &l) {
+void Input(List &l) {
   int n;
   cout << "Please enter number n = ";
   cin >> n;
@@ -57,7 +64,7 @@ void Input(LIST &l) {
     cin >> x;
     cout << endl;
 
-    NODE *p = createNode(x);
+    Node *p = createNode(x);
 
     if (p != NULL) {
       AddTail(l, p);
@@ -66,10 +73,11 @@ void Input(LIST &l) {
 }
 
 int main() {
-  system("clear");
+  List l;
 
-  LIST l;
   Input(l);
+
+  printListNode(l);
 
   return 0;
 }

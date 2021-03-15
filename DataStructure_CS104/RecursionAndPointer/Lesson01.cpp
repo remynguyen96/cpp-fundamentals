@@ -57,17 +57,17 @@ int main() {
 
   inputArray(arr, n);
 
-  // int key;
-  // cout << "Please enter key that need to find: ";
-  // cin >> key;
+  int key;
+  cout << "Please enter key that need to find: ";
+  cin >> key;
 
   // printArray(arr, n);
   // cout << "isPalindrome: " << isPalindrome(arr, n) << endl;
-  // cout << "Smallest number is: " << findMin(arr, n) << endl;
-  // cout << "Largest number is: " << findMaxModulus(arr, n) << endl;
-  // cout << "Checking number of array ascending or not : " << isAscending(arr, n) << endl;
-  // cout << "Sum is: " << sumOfArray(arr, n) << endl;
-  // cout << "The quantity of prime number are: " << countPrime(arr, n) << endl;
+  cout << "Smallest number is: " << findMin(arr, n) << endl;
+  cout << "Largest number is: " << findMaxModulus(arr, n) << endl;
+  cout << "Checking number of array ascending or not : " << isAscending(arr, n) << endl;
+  cout << "Sum is: " << sumOfArray(arr, n) << endl;
+  cout << "The quantity of prime number are: " << countPrime(arr, n) << endl;
   // cout << "Reverse Array : " << ReverseArray(arr, n) << endl;
   // cout << "Linear Search: " << linearSearch(arr, n) << endl;
   // cout << "Sentine Linear Search: " << sentinelLinearSearch(arr, n) << endl;
@@ -196,38 +196,38 @@ int sumOfArray(int* arr, int n) {
 }
 
 
-bool isPrimeNumber(int number) {
-  if (number < 2) {
-    return false;
-  } else {
-    int counter = 0;
+// bool isPrimeNumber(int number) {
+//   if (number < 2) {
+//     return false;
+//   } else {
+//     int counter = 0;
 
-    for (int i = 1; i <= number; i++) {
-      if (number % i == 0) {
-        counter++;
-      }
-    }
+//     for (int i = 1; i <= number; i++) {
+//       if (number % i == 0) {
+//         counter++;
+//       }
+//     }
 
-    if (counter == 2) {
-      return true;
-    }
+//     if (counter == 2) {
+//       return true;
+//     }
 
-    return false;
-  }
-}
+//     return false;
+//   }
+// }
 
-int countPrime(int* arr, int n) {
-  int count = 0;
+// int countPrime(int* arr, int n) {
+//   int count = 0;
 
 
-  for (int i = 0; i < n; i++) {
-    if (isPrimeNumber(arr[i])) {
-      count++;
-    }
-  }
+//   for (int i = 0; i < n; i++) {
+//     if (isPrimeNumber(arr[i])) {
+//       count++;
+//     }
+//   }
 
-  return count;
-}
+//   return count;
+// }
 
 // int recursiveBinarySearch(int* array, int left, int right, int key) {
 //   int midNumber = round(n / 2);

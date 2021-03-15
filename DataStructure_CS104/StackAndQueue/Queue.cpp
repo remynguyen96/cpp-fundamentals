@@ -16,7 +16,7 @@ Node* createNode(int);
 Queue* init();
 bool isEmpty(Queue* &);
 void enqueue(Queue* &, int);
-int dequeue(Queue* &);
+Node* dequeue(Queue* &);
 void printQueue(Queue* &);
 int countElements(Queue* &);
 
@@ -42,9 +42,9 @@ int main() {
 
   inputDataForQueue(queue);
 
-  cout << "Total Elements: " << countElements(queue) << endl;
-
   printQueue(queue);
+
+  cout << "Total Elements: " << countElements(queue) << endl;
 
   return 0;
 }
@@ -84,27 +84,52 @@ void enqueue(Queue* &queue, int data) {
   queue->pTail = pNode;
 }
 
-int dequeue(Queue* &queue) {
-  if (isEmpty(queue)) return 0;
+void enqueue(Queue* &queue, Node* node) {
+  if (isEmpty(queue)) {
+    queue->pHead = queue->pTail = node;
+  }
+
+  queue->pTail->pNext = node;
+  queue->pTail = node;
+}
+
+Node* dequeue(Queue* &queue) {
+  if (isEmpty(queue)) return NULL;
 
   Node* node = queue->pHead;
-  int data = node->data;
-
   queue->pHead = queue->pHead->pNext;
 
-  delete node;
+  // in case only one node in queue.
+  if (isEmpty(queue)) {
+    queue->pTail = NULL;
+  }
 
-  return data;
+  return node;
 }
 
 void printQueue(Queue* &queue) {
-  Node* pNode = queue->pHead;
+  Queue* newQueue = new Queue;
 
-  while (pNode) {
-    cout << pNode->data << endl;
-    pNode = pNode->pNext;
+  while (queue->pHead) {
+    Node* node = dequeue(queue);
+    enqueue(newQueue, node);
+
+    cout << node->data << endl;
   }
+
+  queue = newQueue;
 }
+
+// void printQueue(Queue* &queue) {
+//   Node* pNode = queue->pHead;
+
+//   while (pNode) {
+//     cout << pNode->data << endl;
+//     pNode = pNode->pNext;
+//   }
+
+//   delete pNode;
+// }
 
 int countElements(Queue* &queue) {
   Node* pNode = queue->pHead;

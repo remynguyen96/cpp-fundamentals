@@ -16,8 +16,8 @@ bool isEmpty(Stack* &stack);
 Node* createNode(int data);
 void print(Stack* &stack);
 void push(Stack* &stack, Node* node);
-int pop(Stack* &stack);
-int countElements(Stack* &stack, int counter);
+Node* pop(Stack* &stack);
+int countElements(Stack* &stack);
 
 void inputStack(Stack* &stack) {
   int n;
@@ -45,7 +45,7 @@ int main() {
 
   inputStack(stack);
 
-  cout << "Total Elements: " << countElements(stack, 0) << endl;
+  cout << "Total Elements: " << countElements(stack) << endl;
 
   print(stack);
 
@@ -83,41 +83,33 @@ void push(Stack* &stack, Node *node) {
   }
 }
 
-int pop(Stack* &stack) {
+Node* pop(Stack* &stack) {
   if (isEmpty(stack)) return 0;
 
   Node *node = stack->top;
 
-  int data = node->data;
-
   stack->top = stack->top->pNext;
 
-  delete node;
-
-  return data;
+  return node;
 }
 
 void print(Stack* &stack) {
   if(isEmpty(stack)) return;
 
-  int data = pop(stack);
-  cout << data << endl;
+  Node* node = pop(stack);
+  cout << node->data << endl;
 
   print(stack);
-
-  Node* node = createNode(data);
   push(stack, node);
 }
 
-int countElements(Stack* &stack, int counter) {
-  if(isEmpty(stack)) return counter;
+int countElements(Stack* &stack) {
+  if(isEmpty(stack)) return 0;
 
-  int data = pop(stack);
+  Node* node = pop(stack);
 
-  counter++;
-  int result = countElements(stack, counter);
+  int result = countElements(stack) + 1;
 
-  Node* node = createNode(data);
   push(stack, node);
 
   return result;

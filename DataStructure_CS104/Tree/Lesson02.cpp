@@ -37,15 +37,16 @@ void inOrder(NODE *root) {
   if (root == NULL) return;
 
   inOrder(root -> pLeft);
-  cout << root -> data;
   inOrder(root -> pRight);
+
+  cout << root -> data;
 }
 
 void postOrder(NODE *root) {
   if (root == NULL) return;
 
-  postOrder(root -> pLeft);
-  postOrder(root -> pRight);
+  inOrder(root -> pLeft);
+  inOrder(root -> pRight);
 
   cout << root -> data;
 }

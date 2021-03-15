@@ -42,7 +42,7 @@ void Nhap(NHANVIEN &nv) {
   getline(cin, nv.hoten);
 
   cout << "Nhap Luong: ";
-  cin >> nv.luong; 
+  cin >> nv.luong;
 }
 
 void Nhap(NHANVIEN a[], int &n) {
