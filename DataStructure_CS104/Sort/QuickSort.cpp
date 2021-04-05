@@ -20,7 +20,7 @@ int main() {
   // int arr[] = {1, 2, 3, 4, 5, 6, 7};
   int arr[] = {5, 12, 1, 6, 9, 15, 7};
   int n = sizeof(arr) / sizeof(arr[0]);
-  // recommend this way!
+
   for (int i = 0; i < n - 1; i++) {
     int min = i;
 
@@ -30,21 +30,10 @@ int main() {
       }
     }
 
-    swap(arr[min], arr[i]); // same as swap(&arr[min], &arr[i]);
+    swap(arr[min], arr[i]);
 
     printArr(arr, n);
   }
-
-  // for (int i = 0; i < n - 1; i++) {
-  //   int min = i;
-
-  //   for (int j = i + 1; j < n; j++) {
-  //     if (arr[min] > arr[j]) {
-  //       swap(&arr[i], &arr[j]);
-  //     }
-  //   }
-  //   printArr(arr, n);
-  // }
 
   return 1;
 }

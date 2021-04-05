@@ -1,5 +1,5 @@
 #include <iostream>
-#include <fstream> 
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -14,22 +14,22 @@ struct Student {
 int main() {
   system("clear");
 
-  ifstream ifs; 
+  ifstream ifs;
   ifs.open("mocks/data.txt");
 
   if (!ifs.is_open()) {
     cout << "Could not open file!"<< endl;
-    return 0; 
+    return 0;
   }
 
-  string ignore_line = ""; 
+  string ignore_line = "";
 
   getline(ifs, ignore_line);
 
   string name = "";
   string math = "";
   string literature = "";
-  vector<Student> listStudents; 
+  vector<Student> listStudents;
   Student student;
 
   while (!ifs.eof()) {
@@ -47,7 +47,7 @@ int main() {
   }
 
   ifs.close();
-  
+
   ofstream ofs;
   ofs.open("bin/result.txt");
 

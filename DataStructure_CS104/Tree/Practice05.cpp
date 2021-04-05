@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cmath>
+#include <queue>
 
 using namespace std;
 
@@ -8,74 +8,182 @@ struct Node {
   int data;
   Node *pLeft, *pRight;
 };
-
 typedef Node* Tree;
+
+/* Function protoypes */
+bool isEmpty(Tree);
+bool isAVLTree(Tree);
+
+Node* createNode(int);
+Tree createTree(int [], int);
+
+int getHeight(Tree);
+int calculateHeight(Tree);
+
+void addNodeToTree(Tree &, int);
+void removeNode(Tree &, int);
+void removeTree(Tree &);
+
+Tree leftRotate(Tree);
+Tree rightRotate(Tree);
+Tree searchNode(Tree, int);
+
+void preOrder(Tree);
+
+void printGivenLevel(Tree, int);
+void printLevelOrder(Tree);
+
+void printLevelOrderUseQueue(Tree);
+
+int main() {
+  Tree tree = NULL;
+
+  // int x;
+  // cout << "Enter number of items of array: ";
+  // x = 3;
+  // cout << x << "\n";
+
+  // srand(time(NULL));
+
+  // int testFindingNode = 0;
+
+  // for (int i = 0; i < x; i++) {
+  //   int k;
+  //   cout << "x[" << i << "] = ";
+  //   k = rand() % (100 + 1);
+  //   cout << k << "\n";
+
+  //   if (i == 0) testFindingNode = k;
+
+  //   addNodeToTree(tree, k);
+  // }
+
+  addNodeToTree(tree, 50);
+  addNodeToTree(tree, 30);
+  addNodeToTree(tree, 70);
+  addNodeToTree(tree, 20);
+  addNodeToTree(tree, 40);
+
+  addNodeToTree(tree, 45);
+  addNodeToTree(tree, 60);
+  addNodeToTree(tree, 80);
+
+
+  // removeTree(tree);
+  printLevelOrderUseQueue(tree);
+
+  cout << "\n\n\n";
+  printLevelOrderUseQueue(tree);
+
+  // cout << tree << endl;
+
+  // cout << searchNode(tree, testFindingNode) << endl;
+
+  // cout << "\n\n";
+
+  // preOrder(tree);
+  // printLevelOrder(tree);
+
+  return 1;
+}
 
 bool isEmpty(Tree tree) {
   return tree == nullptr;
 }
 
-Tree cloneTree(Tree tree) {
-  Tree newTree = new Node;
+bool isAVLTree(Tree tree) {
+  int balanceFactor = getHeight(tree->pLeft) - getHeight(tree->pRight);
 
-  if(!isEmpty(tree)) {
-      newTree->height = tree->height;
-      newTree->data = tree->data;
-      newTree->pLeft = cloneTree(tree->pLeft);
-      newTree->pRight = cloneTree(tree->pRight);
-
-      cout <<"Clone "<< tree->data << endl;
-  }
-
-  return newTree;
+  return (balanceFactor > 1 || balanceFactor < -1) ? false : true;
 }
 
-Tree createNode(int data) {
+Node* createNode(int data) {
   Tree node = new Node();
 
   node->data = data;
-  node->height = 0;
+  node->height = 1;
   node->pLeft = node->pRight = NULL;
 
   return node;
 }
 
-void inOrder(Tree t) {
-    if (t == NULL) return;
+Tree createTree(int arr[], int n) {
+  Tree tree = new Node();
 
-    inOrder(t->pLeft);
-    cout << t->data << " ";
-    inOrder(t->pRight);
+  for (int i = 0; i < n; i++) {
+    addNodeToTree(tree, arr[i]);
+  }
+
+  return tree;;
 }
 
-int calculateHeight(Tree tree) {
-  if (isEmpty(tree)) return -1;
-  // if (isEmpty(tree->pLeft) && isEmpty(tree->pRight)) return 0;
+int getHeight(Tree tree) {
+  if (isEmpty(tree)) return 0;
 
   return tree->height;
 }
 
-int getBalanced(Tree tree) {
+int calculateHeight(Tree tree) {
   if (isEmpty(tree)) return 0;
 
-  int leftHeight = calculateHeight(tree->pLeft);
-  int rightHeight = calculateHeight(tree->pRight);
-
-  // value <= 1. It means the tree is balanced
-  return abs(leftHeight - rightHeight);
+  return max(getHeight(tree->pLeft), getHeight(tree->pRight)) + 1;
 }
 
-void leftRotate(Tree &tree) {
+Tree searchNode(Tree tree, int key) {
+  Tree newTree = tree;
 
+  while (newTree != NULL) {
+    if (key < newTree->data) {
+      newTree = newTree->pLeft;
+    } else if (key > newTree->data) {
+      newTree = newTree->pRight;
+    } else {
+      return newTree;
+    }
+  }
+
+  return NULL;
 }
 
-void rightRotate(Tree &tree) {
+Tree searchNode2(Tree tree, int key) {
+  if (isEmpty(tree)) return NULL;
 
+  if (key < tree->data) {
+    return searchNode(tree->pLeft, key);
+  } else if (key > tree->data) {
+    return searchNode(tree->pRight, key);
+  }
 
+  if (tree->data == key) return tree;
+
+  return NULL;
 }
 
+Tree leftRotate(Tree tree) {
+  Tree rightChild = tree->pRight;
+  Tree leftOfRightChild = rightChild->pLeft;
 
-// 80 16 93 24 98
+  tree->pRight = leftOfRightChild;
+  rightChild->pLeft = tree;
+
+  tree->height = calculateHeight(tree);
+  rightChild->height = calculateHeight(rightChild);
+
+  return rightChild;
+}
+
+Tree rightRotate(Tree tree) {
+  Tree leftChild = tree->pLeft;
+  Tree rightChildOfLeft = leftChild->pRight;
+
+  tree->pLeft = rightChildOfLeft;
+  leftChild->pRight = tree;
+
+  tree->height = calculateHeight(tree);
+  leftChild->height = calculateHeight(leftChild);
+
+  return leftChild;
+}
 
 void addNodeToTree(Tree &tree, int value) {
   if (isEmpty(tree)) {
@@ -91,173 +199,162 @@ void addNodeToTree(Tree &tree, int value) {
     return;
   }
 
-// 80 16 93 24 98
+  int balanceFactor = getHeight(tree->pLeft) - getHeight(tree->pRight);
 
-// 80 root without stack, height = 0;
+  if (balanceFactor > 1 && value < tree->pLeft->data) {
+    tree = rightRotate(tree);
+  }
 
-// 16 left
-// with root is 80, leftheight is 0, rightheight is -1, currentHeight is 0
-// height at root = 0 + 1
-// balanceFactor at root = 0 - (-1) = 1;
+  if (balanceFactor > 1 && value > tree->pLeft->data) {
+    tree->pLeft = leftRotate(tree->pLeft);
+    tree = rightRotate(tree);
+  }
 
-// 93 right
-// with root is 80, leftheight is 0, rightheight is 0, currentHeight is 0
-// height at root = 0 + 1
-// balanceFactor at root =  0 - 0 = 0;
+  if (balanceFactor < -1 && value > tree->pRight->data) {
+    tree = leftRotate(tree);
+  }
 
-// 24 left
-// with root is 16, leftheight is -1, rightheight is 0, currentHeight is 0
-// height at root = 0 + 1 = 1
-// balanceFactor at root = |-1 - 0| = 1;
+  if (balanceFactor < -1 && value < tree->pRight->data) {
+    tree->pRight = rightRotate(tree->pRight);
+    tree = leftRotate(tree);
+  }
 
-// with root is 80, leftheight is 1, rightheight is 0, currentHeight is 0
-// height at 16 root = 1 + 1 = 2
-// balanceFactor at root = 1 - 0 =  1;
+  tree->height = calculateHeight(tree);
+}
 
-// 98 right
-// with root is 93, leftheight is -1, rightheight is 0, currentHeight is 0
-// height at root = 1 + 0 = 1
-// balanceFactor at root = |- 1 - 0| =  1;
+void removeTree(Tree &tree) {
+  if (isEmpty(tree)) return;
 
-// with root is 80, leftheight is 1, rightheight is 1, currentHeight is 1
-// height at 16 root = 1 + 1 = 2
-// balanceFactor at root = 1 - 1 =  0;
+  removeTree(tree->pLeft);
+  removeTree(tree->pRight);
 
-  int currentHeight = max(calculateHeight(tree->pLeft), calculateHeight(tree->pRight));
-  tree->height = currentHeight + 1;
+  delete tree;
+  tree = NULL;
+}
 
-  int balanceFactor = getBalanced(tree);
+int getBalance(Node *N) {
+  if (N == NULL) return 0;
 
-  if (balanceFactor <= 1) return;
+  return getHeight(N->pLeft) - getHeight(N->pRight);
+}
 
-  cout << "stack:: root factor: " << balanceFactor << endl;
-  int leftBalanceFactor = getBalanced(tree->pLeft);
-  int rightBalanceFactor = getBalanced(tree->pRight);
-
-  cout << "stack:: left factor: " << leftBalanceFactor << endl;
-  cout << "stack:: right factor: " << rightBalanceFactor << endl;
-
-  cout << "value: " << value << endl;
-  cout << "left: " << tree->data << endl;
-  cout << "right: " << tree->data << endl;
+void removeNode(Tree &tree, int value) {
+  if (isEmpty(tree)) return;
 
   if (value < tree->data) {
-    // right rotate
-    cout << "Right rotate" << endl;
+    return removeNode(tree->pLeft, value);
   }
 
   if (value > tree->data) {
-      // left rotate
-    cout << "left rotate" << endl;
+    return removeNode(tree->pRight, value);
   }
 
+  if (value != tree->data) {
+    cout << "Could not found the value " << value <<" to remove at tree" << endl;
+    return;
+  };
+
+
+  if (isEmpty(tree->pLeft) && isEmpty(tree->pRight)) {
+    delete tree;
+    tree = NULL;
+    return;
+  }
+
+  if (!isEmpty(tree->pLeft) && !isEmpty(tree->pRight)) {
+    Tree treeReplaced = tree->pLeft;
+
+    if (isEmpty(treeReplaced->pRight)) {
+      tree->data = treeReplaced->data;
+      tree->pLeft = treeReplaced->pLeft;
+
+      delete treeReplaced;
+      treeReplaced = NULL;
+      return;
+    }
+
+    Tree parent = NULL;
+    // Loop to find largest number on the left side.
+    while (treeReplaced->pRight) {
+      parent = treeReplaced;
+      treeReplaced = treeReplaced->pRight;
+    }
+
+    tree->data = treeReplaced->data;
+
+    if (!isEmpty(treeReplaced->pLeft)) {
+      parent->pRight = treeReplaced->pLeft;
+    }
+
+    delete treeReplaced;
+    treeReplaced = NULL;
+    return;
+  }
+
+  Tree delTree = tree;
+  tree = isEmpty(tree->pRight) ? tree->pLeft : tree->pRight;
+
+  delete delTree;
+  delTree = NULL;
   return;
-
-
-    // Left Left Case
-    // if (balance > 1 && key < node->left->key)
-    //     return rightRotate(node);
-
-    // Right Right Case
-    // if (balance < -1 && key > node->right->key)
-    //     return leftRotate(node);
-
 }
 
+void preOrder(Tree t) {
+  if (t == NULL) return;
 
-Tree createNode2(int data) {
-  Tree node = new Node();
+  cout << t->data << " ";
+  preOrder(t->pLeft);
+  preOrder(t->pRight);
+}
+/*
+    50
+  /   \
+30      70
+/ \   / \
+20 40 60 80
+*/
+void printLevelOrder(Tree tree) {
+  int h = tree->height;
 
-  node->data = data;
-  node->height = 1;
-  node->pLeft = node->pRight = NULL;
-
-  return node;
+  for (int i = 0; i < h; i++) {
+   printGivenLevel(tree, i);
+  }
 }
 
-void rotateLeft(Tree tree) {
-  Tree newTree = tree->pLeft;
+void printGivenLevel(Tree tree, int index) {
+  if (isEmpty(tree)) return;
 
-
-}
-
-void rotateRight(Tree tree) {
-  Tree newTree = tree->pRight;
-
-
-}
-
-int calculateHeight2(Tree tree) {
-  if (isEmpty(tree)) return 0;
-
-  return tree->height;
-}
-
-void addNodeToTree2(Tree &tree, int value) {
-  if (isEmpty(tree)) {
-    tree = createNode2(value);
+  if (index == 0) {
+    cout << tree->data << "(" << tree->height << ") " << endl;
     return;
   }
 
-  if (value < tree->data) {
-    addNodeToTree2(tree->pLeft, value);
-  } else if (value > tree->data) {
-    addNodeToTree2(tree->pRight, value);
-  } else {
-    return;
-  }
-
-  int leftHeight = calculateHeight2(tree->pLeft);
-  int rightHeight = calculateHeight2(tree->pRight);
-  int x = leftHeight - rightHeight;
-
-  if (x > 1) {
-    cout << "rotation" << endl;
-  }
-
-  cout << rightHeight << endl;
-  cout << leftHeight << endl;
-
-  tree->height = max(leftHeight, rightHeight) + 1;
+  printGivenLevel(tree->pLeft, index - 1);
+  printGivenLevel(tree->pRight, index - 1);
 }
 
+void printLevelOrderUseQueue(Tree tree) {
+  if (isEmpty(tree)) return;
 
-// rotate right
-// Node* q = p -> left;
-// p->left = q->right
-// q->right = p;
-//  p = q;
+  // Create a empty queue;
+  queue<Tree> q;
 
-int main() {
-  Tree tree = NULL;
+  // Enqueue root and initialize height
+  q.push(tree);
 
-  // int x;
-  // cout << "Enter number of items of array: ";
-  // x = 15;
-  // cout << x << "\n";
+  while (!q.empty()) {
+    Tree root = q.front();
 
-  // srand(time(NULL));
-  // for (int i = 0; i < x; i++) {
-  //   int k;
-  //   cout << "x[" << i << "] = ";
-  //   k = rand() % (100 + 1);
-  //   cout << k << "\n";
+    cout << root->data << " -- " << root->height << endl;
 
-  //   addNodeToTree(tree, k);
-  // }
+    q.pop();
 
-  // addNodeToTree(tree, 80);
-  // addNodeToTree(tree, 16);
-  // addNodeToTree(tree, 93);
-  // addNodeToTree(tree, 24);
-  // addNodeToTree(tree, 98);
+    if (!isEmpty(root->pLeft)) {
+      q.push(root->pLeft);
+    }
 
-  addNodeToTree2(tree, 80);
-  addNodeToTree2(tree, 16);
-  addNodeToTree2(tree, 24);
-
-
-  inOrder(tree);
-
-  return 1;
+    if (!isEmpty(root->pRight)) {
+      q.push(root->pRight);
+    }
+  }
 }

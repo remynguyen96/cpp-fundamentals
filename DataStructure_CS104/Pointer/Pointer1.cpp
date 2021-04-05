@@ -14,19 +14,40 @@ void SynchronizePointer() {
   *pointer = 400;
   q = p;
 
-  cout << &a << endl;
-  cout << p << endl;
-  cout << q << endl;
-  cout << pointer << endl;
-  cout << *pointer << endl;
+  // int normal_1 = 100, normal_2 = 200, normal_3 = 300;
+  // int *pointer5 = new int;
+  // *pointer5 = normal_3;
 
-  a = 8;
-  cout << *p << endl;
-  cout << a << endl;
+  // cout << *pointer5 << "--" << pointer5 << endl;
+  // cout << normal_3 << endl;
+  // cout << normal_2 << endl;
+  // cout << normal_1 << endl;
 
-  *p = 5;
-  cout << *p << endl;
-  cout << a << endl;
+  int *temp = new int;
+  *temp = *pointer;
+
+  cout << *temp << "--" << temp << endl;
+  cout << *pointer << "--" << pointer << endl;
+
+  temp = NULL;
+  delete temp;
+  cout << "-----------" << endl;
+
+
+
+  // cout << &a << endl;
+  // cout << p << endl;
+  // cout << q << endl;
+  // cout << pointer << endl;
+  // cout << *pointer << endl;
+
+  // a = 8;
+  // cout << *p << endl;
+  // cout << a << endl;
+
+  // *p = 5;
+  // cout << *p << endl;
+  // cout << a << endl;
 }
 
 // Pass-by-Reference with Pointer Arguments

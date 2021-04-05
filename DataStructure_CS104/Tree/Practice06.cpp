@@ -8,9 +8,9 @@ struct Node {
   int data;
   Node *pLeft, *pRight;
 };
-
 typedef Node* Tree;
 
+/* Function protoypes */
 bool isEmpty(Tree);
 bool isAVLTree(Tree);
 
@@ -21,43 +21,71 @@ int getHeight(Tree);
 int calculateHeight(Tree);
 
 void addNodeToTree(Tree &, int);
-void removeNode(Tree &, int);
+void deleteNode(Tree &, int);
+void removeTree(Tree &);
 
 Tree leftRotate(Tree);
 Tree rightRotate(Tree);
 Tree searchNode(Tree, int);
 
-void LevelOrder(Tree);
 void preOrder(Tree);
+
+void printGivenLevel(Tree, int);
+void printLevelOrder(Tree);
+
+void printLevelOrderUseQueue(Tree);
+
+// Tree cloneTree(Tree tree) {
+//   Tree newTree = new Node;
+
+//   if(!isEmpty(tree)) {
+//       newTree->height = tree->height;
+//       newTree->data = tree->data;
+//       newTree->pLeft = cloneTree(tree->pLeft);
+//       newTree->pRight = cloneTree(tree->pRight);
+
+//       cout <<"Clone "<< tree->data << endl;
+//   }
+
+//   return newTree;
+// }
 
 int main() {
   Tree tree = NULL;
 
-  int x;
-  cout << "Enter number of items of array: ";
-  x = 3;
-  cout << x << "\n";
+  addNodeToTree(tree, 50);
 
-  srand(time(NULL));
+  addNodeToTree(tree, 40);
+  addNodeToTree(tree, 70);
 
-  int testFindingNode = 0;
+  addNodeToTree(tree, 30);
+  addNodeToTree(tree, 45);
 
-  for (int i = 0; i < x; i++) {
-    int k;
-    cout << "x[" << i << "] = ";
-    k = rand() % (100 + 1);
-    cout << k << "\n";
+  addNodeToTree(tree, 60);
+  addNodeToTree(tree, 80);
 
-    if (i == 0) testFindingNode = k;
+  addNodeToTree(tree, 20);
+  addNodeToTree(tree, 85);
 
-    addNodeToTree(tree, k);
-  }
+  addNodeToTree(tree, 49);
+  addNodeToTree(tree, 44);
+  addNodeToTree(tree, 43);
+
+  printLevelOrderUseQueue(tree);
+
+  deleteNode(tree, 40);
+
+  cout << "\n\n\n";
+  printLevelOrderUseQueue(tree);
+
+  // cout << tree << endl;
 
   // cout << searchNode(tree, testFindingNode) << endl;
 
-  cout << "\n\n";
+  // cout << "\n\n";
 
-  preOrder(tree);
+  // preOrder(tree);
+  // printLevelOrder(tree);
 
   return 1;
 }
@@ -105,6 +133,22 @@ int calculateHeight(Tree tree) {
 }
 
 Tree searchNode(Tree tree, int key) {
+  Tree newTree = tree;
+
+  while (newTree != NULL) {
+    if (key < newTree->data) {
+      newTree = newTree->pLeft;
+    } else if (key > newTree->data) {
+      newTree = newTree->pRight;
+    } else {
+      return newTree;
+    }
+  }
+
+  return NULL;
+}
+
+Tree searchNode2(Tree tree, int key) {
   if (isEmpty(tree)) return NULL;
 
   if (key < tree->data) {
@@ -120,9 +164,9 @@ Tree searchNode(Tree tree, int key) {
 
 Tree leftRotate(Tree tree) {
   Tree rightChild = tree->pRight;
-  Tree leftChildOfRight = rightChild->pLeft;
+  Tree leftOfRightChild = rightChild->pLeft;
 
-  tree->pRight = leftChildOfRight;
+  tree->pRight = leftOfRightChild;
   rightChild->pLeft = tree;
 
   tree->height = calculateHeight(tree);
@@ -181,8 +225,99 @@ void addNodeToTree(Tree &tree, int value) {
   tree->height = calculateHeight(tree);
 }
 
-void removeNode(Tree &tree, int value) {
+void removeTree(Tree &tree) {
+  if (isEmpty(tree)) return;
 
+  removeTree(tree->pLeft);
+  removeTree(tree->pRight);
+
+  delete tree;
+  tree = NULL;
+}
+
+Tree maxValueNode(Tree tree) {
+  Tree current = tree;
+
+  while (current->pRight != NULL) {
+    current = current->pRight;
+  }
+
+  return current;
+}
+
+int getBalance(Node *N) {
+  if (N == NULL) return 0;
+
+  return getHeight(N->pLeft) - getHeight(N->pRight);
+}
+
+void deleteNode(Tree &tree, int value) {
+  if (isEmpty(tree)) return;
+
+  if (value < tree->data) {
+    return deleteNode(tree->pLeft, value);
+  }
+
+  if (value > tree->data) {
+    return deleteNode(tree->pRight, value);
+  }
+
+  if (value != tree->data) {
+    cout << "Could not found the value " << value <<" to remove at tree" << endl;
+    return;
+  };
+
+  if (isEmpty(tree->pLeft) || isEmpty(tree->pRight)) {
+    Tree temp = !isEmpty(tree->pLeft) ? tree->pLeft : tree->pRight;
+
+    if (isEmpty(temp)) {
+      // do not any children
+      temp = tree;
+      tree = NULL;
+    } else {
+      // only one child
+      *tree = *temp;
+
+      temp = NULL;
+      delete temp;
+    }
+  } else {
+    Tree temp = maxValueNode(tree->pLeft);
+    tree->data = temp->data;
+
+    deleteNode(tree->pLeft, temp->data);
+  }
+
+   if (isEmpty(tree)) return;
+
+   tree->height = calculateHeight(tree);
+
+  int balanceFactor = getHeight(tree->pLeft) - getHeight(tree->pRight);
+  // Left Left Case
+  if (balanceFactor > 1 && getBalance(tree->pLeft) >= 0) {
+    tree = rightRotate(tree);
+    return;
+  }
+
+  // Left Right Case
+  if (balanceFactor > 1 && getBalance(tree->pLeft) < 0) {
+    tree->pLeft = leftRotate(tree->pLeft);
+    tree = rightRotate(tree);
+    return;
+  }
+
+  // Right Right Case
+  if (balanceFactor < -1 && getBalance(tree->pRight) <= 0) {
+    tree = leftRotate(tree);
+    return;
+  }
+
+  // Right Left Case
+  if (balanceFactor < -1 && getBalance(tree->pRight) > 0) {
+    tree->pRight = rightRotate(tree->pRight);
+    tree = leftRotate(tree);
+    return;
+  }
 }
 
 void preOrder(Tree t) {
@@ -192,7 +327,55 @@ void preOrder(Tree t) {
   preOrder(t->pLeft);
   preOrder(t->pRight);
 }
+/*
+    50
+  /   \
+30      70
+/ \   / \
+20 40 60 80
+*/
+void printLevelOrder(Tree tree) {
+  int h = tree->height;
 
-void LevelOrder(Tree tree) {
+  for (int i = 0; i < h; i++) {
+   printGivenLevel(tree, i);
+  }
+}
 
+void printGivenLevel(Tree tree, int index) {
+  if (isEmpty(tree)) return;
+
+  if (index == 0) {
+    cout << tree->data << "(" << tree->height << ") " << endl;
+    return;
+  }
+
+  printGivenLevel(tree->pLeft, index - 1);
+  printGivenLevel(tree->pRight, index - 1);
+}
+
+void printLevelOrderUseQueue(Tree tree) {
+  if (isEmpty(tree)) return;
+
+  // Create a empty queue;
+  queue<Tree> q;
+
+  // Enqueue root and initialize height
+  q.push(tree);
+
+  while (!q.empty()) {
+    Tree root = q.front();
+
+    cout << root->data << " -- " << root->height << endl;
+
+    q.pop();
+
+    if (!isEmpty(root->pLeft)) {
+      q.push(root->pLeft);
+    }
+
+    if (!isEmpty(root->pRight)) {
+      q.push(root->pRight);
+    }
+  }
 }
